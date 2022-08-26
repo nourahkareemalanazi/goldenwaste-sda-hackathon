@@ -1,37 +1,42 @@
-version: '3'
+version: '3.7'
 services:
-  nginx:
-   container_name: some-nginx
-   image: nginx:latest
-   restart: always
+  app:
+   container_name: golden-app
+   build: .
    ports:
-   - 80:80
-   - 443:443
-   volumes:
-   - ./nginx/conf.d:/etc/nginx/conf.d
-   depends_on:
-   - app
- 
-  mysql:
-   container_name: some-mysql
-   image: mysql/mysql-server:5.7
+   - 8080:8080
    environment:
-    MYSQL_DATABASE: test
-    MYSQL_ROOT_PASSWORD: hellokoding
-    MYSQL_ROOT_HOST: '%'
+   - GOLDEN_DB_URL=localhost
+   - GOLDEN_DB_NAME=goldenwaste
+   - GOLDEN_DB_USERNAME=root
+   - GOLDEN_DB_PASSWORD=DevOps2022
+   - GOLDEN_DB_PORT=3306
+   depends_on:
+   - db
+   networks:
+   - goldenwaste-network
+  
+  db:
+   container_name: goldenwastesqldb
+   image: mysql
+   environment:
+   - MYSQL_ROOT_PASSWORD=DevOps2022
+   - MYSQL_DATABASE=goldenwaste
    ports:
    - "3306:3306"
-   restart: always
-  
-  app:
-    restart: always
-    build: ./goldenwaste-sda-hackathon
-    working_dir: /app
-    volumes:
-      - ./app:/app
-      - ~/.m2:/root/.m2
-    expose:
-      - "80"
-    command: mvn clean spring-boot:run
-    depends_on:
-      - mysql
+   volumes:
+   - goldenwaste-mysql:var/lib/mysql
+   - goldenwaste-mysql-config:/etc/mysql
+   networks:
+   - goldenwaste-network
+   
+volumes:
+  goldenwaste-mysql:
+  goldenwaste-mysql-config:
+
+networks:
+  goldenwaste-network:
+    name: goldenwaste-network
+    driver: bridge
+    
+    
