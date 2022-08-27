@@ -5,7 +5,7 @@ ENV GOLDEN_DB_USERNAME=root
 ENV GOLDEN_DB_PASSWORD=DevOps2022
 ENV GOLDEN_DB_PORT=3306
 WORKDIR /app
-ADD pem.xml .|
+ADD pem.xml .
 RUN ["/usr/local/bin/mvn-entrypoint.sh", "mvn", "verify", "clean", "--fail-never"]
 COPY . .
 RUN mvn package
