@@ -1,12 +1,12 @@
 version: '3.7'
 services:
   app:
-   container_name: golden-app
+   container_name: goldenwaste
    build: .
    ports:
    - 8080:8080
    environment:
-   - GOLDEN_DB_URL=localhost
+   - GOLDEN_DB_URL=goldenwastedb
    - GOLDEN_DB_NAME=goldenwaste
    - GOLDEN_DB_USERNAME=root
    - GOLDEN_DB_PASSWORD=DevOps2022
@@ -17,7 +17,7 @@ services:
    - goldenwaste-network
   
   db:
-   container_name: goldenwastesqldb
+   container_name: goldenwastedb
    image: mysql
    environment:
    - MYSQL_ROOT_PASSWORD=DevOps2022
@@ -25,7 +25,7 @@ services:
    ports:
    - "3306:3306"
    volumes:
-   - goldenwaste-mysql:var/lib/mysql
+   - goldenwaste-mysql:/var/lib/mysql
    - goldenwaste-mysql-config:/etc/mysql
    networks:
    - goldenwaste-network
@@ -38,5 +38,3 @@ networks:
   goldenwaste-network:
     name: goldenwaste-network
     driver: bridge
-    
-    
